@@ -1,0 +1,30 @@
+db.mycollection.aggregate([
+    {$match:{ManagerName:'Vishnu'}},
+    {
+        $project: {
+            Empid: 1,
+            EmpName:1,
+            More_than_9: {  
+                $cond: [ { $ne: ["$More_than_9", '' ] }, 1, 0]
+            },
+            More_than_12: {  
+                $cond: [ { $ne: [ "$More_than_12", '' ] }, 1, 0]
+                
+            },
+           Less_than_6: {  
+                $cond: [ { $ne: [ "$Less_than_6", '' ] }, 1, 0]
+                
+            }, 
+        }
+    },
+    {
+        $group: {
+            _id: "$Empid",
+            EmpName: { $first: "$EmpName" },
+            Greater_than_9: { $sum: "$More_than_9" },
+            Greater_than_12: { $sum: "$More_than_12" },
+            Less_than_6:{$sum:"$Less_than_6"},
+            
+        }
+    }
+])
