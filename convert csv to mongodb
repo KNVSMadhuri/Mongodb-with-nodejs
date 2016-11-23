@@ -1,0 +1,17 @@
+import csv
+import json
+import sys, getopt, pprint
+from pymongo import MongoClient
+#CSV to JSON Conversion
+csvfile = open('/home/affine/Desktop/attendance/Processed_Sheet.csv', 'r')
+reader = csv.DictReader(csvfile,dialect='excel-tab')
+mongo_client=MongoClient()
+db=mongo_client.mydb
+db.mycollection.drop()
+header= ["Empid", "Date", "EmpName", "Year", "Month", "Week_Number", "More_than_9", "More_than_12", "Less_than_6", "ManagerName"]
+print(header)
+for each in reader:
+    row={}
+    for field in header:
+        row[field]=each[field]
+    db.mycollection.insert(row)
