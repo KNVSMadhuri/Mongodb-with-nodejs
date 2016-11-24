@@ -1,0 +1,34 @@
+var bookIds = db.mycollection.find({ManagerName:'Ashish'}).map(function(like) { 
+  return like.EmpName; 
+});
+
+db.mycollection.aggregate([
+    {$match:{ManagerName:{$in:bookIds}}},
+    
+    
+    
+    {
+        $group: {
+            _id: "$ManagerName",
+            'Greater_than_9': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$More_than_9", '' ] }, 1, 0]
+                }
+            },
+           'Greater_than_12': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$More_than_12", '' ] }, 1, 0]
+                }
+            },
+            
+            'Less_than_6': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$Less_than_6", '' ] }, 1, 0]
+                }
+            }
+        }
+    }
+    
+    
+    
+    ])
