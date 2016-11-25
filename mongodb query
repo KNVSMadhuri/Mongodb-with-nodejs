@@ -1,0 +1,34 @@
+u = db.mycollection.find({ManagerName: "Ashish" }).toArray()
+idlist= []
+u.forEach(function(myDoc) { idlist.push(myDoc.EmpName ); } )
+db.mycollection.aggregate([
+    {$match:{ManagerName:{$in:idlist}}},
+    
+    
+    
+    {
+        $group: {
+            _id: "$ManagerName",
+            'Greater_than_9': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$More_than_9", '' ] }, 1, 0]
+                }
+            },
+           'Greater_than_12': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$More_than_12", '' ] }, 1, 0]
+                }
+            },
+            
+            'Less_than_6': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$Less_than_6", '' ] }, 1, 0]
+                }
+            }
+        }
+    }
+    
+    
+    
+    ])
+
