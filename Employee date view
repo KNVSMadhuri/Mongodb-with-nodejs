@@ -1,0 +1,63 @@
+u = db.mycollection.find({$and:[{Managerid: 'AAIN0026' },{Date:{$gte:ISODate('2016-10-17 00:00:00.000Z'),$lte:ISODate('2016-10-19 00:00:00.000Z')}}]}).toArray()
+idlist= []
+u.forEach(function(myDoc) { idlist.push(myDoc.Empid),idlist.push(myDoc.Date)})
+db.mycollection.aggregate([
+    {$match:{$and:[{"Managerid": {$in : idlist}},{"Date":{$in:idlist}}]}},
+            
+    {
+        $group: {
+            _id: "$ManagerName",
+            
+            
+            
+            'More_than_9': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$More_than_9", '' ] }, 1, 0]
+                }
+            },
+           'More_than_12': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$More_than_12", '' ] }, 1, 0]
+                }
+            },
+            
+            'Less_than_6': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$Less_than_6", '' ] }, 1, 0]
+                }
+            },
+            'Less_than_9': { 
+                '$sum': {
+                    '$cond':  [ { $ne: ["$Less_than_9", '' ] }, 1, 0]
+                }
+            },
+            
+            'Man_days' : { '$sum' : 1},
+            
+            'Holidays' : { '$sum':{"$cond" : [{"$or" : [{"$eq" : [{"$dayOfWeek" : "$Date"},1]},
+                        {"$eq" : [{"$dayOfWeek" : "$Date"},7]}]},1,0]}}
+            
+        }
+        
+
+    },
+    
+    {
+        $project:{
+       
+        More_than_9 :1,
+        More_than_12:1,
+        Less_than_6: 1,
+        Less_than_9 : 1,
+        Man_days:1,
+        Holidays:1,
+        
+        
+        
+    }
+}
+    
+    
+    ])
+
+
