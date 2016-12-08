@@ -1,0 +1,4 @@
+db.mycollection.find().forEach(function(element){
+  element.OrderDate = ISODate(element.Date);
+  db.collection.save(element);
+})
